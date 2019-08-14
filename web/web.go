@@ -2,7 +2,7 @@ package web
 
 import (
 	"fmt"
-	"launchpad.net/ce-web/imagebuild/config"
+	"github.com/slimjim777/imagebuild/config"
 	"net/http"
 )
 

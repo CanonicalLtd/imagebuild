@@ -1,8 +1,8 @@
 package main
 
 import (
-	"launchpad.net/ce-web/imagebuild/config"
-	"launchpad.net/ce-web/imagebuild/web"
+	"github.com/slimjim777/imagebuild/config"
+	"github.com/slimjim777/imagebuild/web"
 	"log"
 )
 
