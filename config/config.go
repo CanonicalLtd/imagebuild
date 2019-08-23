@@ -8,6 +8,7 @@ const (
 	DefaultDocRoot       = "static"
 	DefaultIndexTemplate = "index.html"
 	DefaultBoardsPath    = "boards.yaml"
+	DefaultStoreURL      = "https://api.snapcraft.io/api/v1/"
 )
 
 // Settings defines the application configuration
@@ -16,6 +17,7 @@ type Settings struct {
 	DocRoot       string
 	IndexTemplate string
 	BoardsPath    string
+	StoreURL      string
 }
 
 // ParseArgs checks the environment variables
@@ -33,5 +35,6 @@ func ParseArgs() *Settings {
 		DocRoot:       DefaultDocRoot,
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
+		StoreURL:      DefaultStoreURL,
 	}
 }

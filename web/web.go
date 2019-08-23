@@ -33,6 +33,7 @@ func (srv Web) Router() *mux.Router {
 	router := mux.NewRouter()
 
 	router.Handle("/v1/boards", Middleware(http.HandlerFunc(srv.BoardsList))).Methods("GET")
+	router.Handle("/v1/store/snaps/{snapName}", Middleware(http.HandlerFunc(srv.StoreSearchHandler))).Methods("GET")
 
 	// Serve the static path
 	p := path.Join(srv.Settings.DocRoot, "/static/")
