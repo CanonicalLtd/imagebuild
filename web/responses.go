@@ -22,19 +22,6 @@ type BoardsResponse struct {
 	Boards []domain.Board `json:"boards"`
 }
 
-// formatStandardResponse returns a JSON response from an API method, indicating success or failure
-func formatStandardResponse(code, message string, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", JSONHeader)
-	response := StandardResponse{Code: code, Message: message}
-
-	if len(code) > 0 {
-		w.WriteHeader(http.StatusBadRequest)
-	}
-
-	// Encode the response as JSON
-	encodeResponse(w, response)
-}
-
 // formatBoardsResponse returns a JSON response from a snap list API method
 func formatBoardsResponse(boards []domain.Board, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)

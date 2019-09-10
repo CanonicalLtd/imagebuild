@@ -45,8 +45,5 @@ func (brd *BoardService) read(path string) error {
 
 // List returns the list of boards
 func (brd *BoardService) List() []domain.Board {
-	if brd.boards == nil {
-		return []domain.Board{}
-	}
 	return brd.boards
 }
