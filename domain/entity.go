@@ -1,3 +1,6 @@
+// Image Builder
+// Copyright 2019 Canonical Ltd.  All rights reserved.
+
 package domain
 
 // Board defines a board for enablement
