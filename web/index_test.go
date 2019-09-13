@@ -4,7 +4,7 @@
 package web
 
 import (
-	"github.com/slimjim777/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/config"
 	"net/http"
 	"strings"
 	"testing"

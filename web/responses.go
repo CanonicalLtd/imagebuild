@@ -5,7 +5,7 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/slimjim777/imagebuild/domain"
+	"github.com/CanonicalLtd/imagebuild/domain"
 	"log"
 	"net/http"
 )

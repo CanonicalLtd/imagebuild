@@ -1,4 +1,4 @@
-module github.com/slimjim777/imagebuild
+module github.com/CanonicalLtd/imagebuild
 
 go 1.12
 

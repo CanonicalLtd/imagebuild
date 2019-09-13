@@ -4,9 +4,9 @@
 package main
 
 import (
-	"github.com/slimjim777/imagebuild/config"
-	"github.com/slimjim777/imagebuild/service"
-	"github.com/slimjim777/imagebuild/web"
+	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/service"
+	"github.com/CanonicalLtd/imagebuild/web"
 	"log"
 )
 

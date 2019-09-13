@@ -5,9 +5,9 @@ package web
 
 import (
 	"fmt"
+	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/service"
 	"github.com/gorilla/mux"
-	"github.com/slimjim777/imagebuild/config"
-	"github.com/slimjim777/imagebuild/service"
 	"net/http"
 	"path"
 )

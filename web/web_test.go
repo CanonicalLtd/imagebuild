@@ -5,8 +5,8 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/slimjim777/imagebuild/config"
-	"github.com/slimjim777/imagebuild/service"
+	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/service"
 	"io"
 	"net/http"
 	"net/http/httptest"

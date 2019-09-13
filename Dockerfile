@@ -1,6 +1,6 @@
 FROM golang:1.12 as builder1
-COPY . ./src/github.com/slimjim777/imagebuild
-WORKDIR /go/src/github.com/slimjim777/imagebuild
+COPY . ./src/github.com/CanonicalLtd/imagebuild
+WORKDIR /go/src/github.com/CanonicalLtd/imagebuild
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -a -o /go/bin/imagebuild cmd/imagebuild/main.go
 
 FROM node:8-alpine as builder2

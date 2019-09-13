@@ -4,8 +4,8 @@
 package service
 
 import (
-	"github.com/slimjim777/imagebuild/config"
-	"github.com/slimjim777/imagebuild/domain"
+	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/domain"
 	"path"
 	"reflect"
 	"testing"
