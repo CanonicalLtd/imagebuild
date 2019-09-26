@@ -1,3 +1,6 @@
+[![Build Status][travis-image]][travis-url]
+[![Go Report Card][goreportcard-image]][goreportcard-url]
+[![codecov][codecov-image]][codecov-url]
 # Image Build
 
 Ubuntu image building solution
@@ -22,3 +25,10 @@ Ubuntu image building solution
  ```bash
  go run cmd/imagebuild/main.go
  ```
+
+[travis-image]: https://travis-ci.org/CanonicalLtd/imagebuild.svg?branch=master
+[travis-url]: https://travis-ci.org/CanonicalLtd/imagebuild
+[goreportcard-image]: https://goreportcard.com/badge/github.com/CanonicalLtd/imagebuild
+[goreportcard-url]: https://goreportcard.com/report/github.com/CanonicalLtd/imagebuild
+[codecov-url]: https://codecov.io/gh/CanonicalLtd/imagebuild
+[codecov-image]: https://codecov.io/gh/CanonicalLtd/imagebuild/branch/master/graph/badge.svg
