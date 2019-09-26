@@ -3,7 +3,10 @@
 
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 // Default settings
 const (
@@ -21,6 +24,8 @@ type Settings struct {
 	IndexTemplate string
 	BoardsPath    string
 	StoreURL      string
+	LPToken       string
+	LPSecret      string
 }
 
 // ParseArgs checks the environment variables
@@ -28,6 +33,10 @@ func ParseArgs() *Settings {
 	var (
 		port = DefaultPort
 	)
+
+	if len(os.Getenv("LPTOKEN")) == 0 || len(os.Getenv("LPSECRET")) == 0 {
+		log.Fatalln("The Launchpad access token and secret must be supplied (LPTOKEN, LPSECRET)")
+	}
 
 	if len(os.Getenv("PORT")) > 0 {
 		port = os.Getenv("PORT")
@@ -39,5 +48,7 @@ func ParseArgs() *Settings {
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
 		StoreURL:      DefaultStoreURL,
+		LPToken:       os.Getenv("LPTOKEN"),
+		LPSecret:      os.Getenv("LPSECRET"),
 	}
 }

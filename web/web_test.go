@@ -6,6 +6,7 @@ package web
 import (
 	"encoding/json"
 	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/launchpad"
 	"github.com/CanonicalLtd/imagebuild/service"
 	"io"
 	"net/http"
@@ -26,7 +27,7 @@ func defaultsService() (*config.Settings, *service.BoardService) {
 		DocRoot:    "../static",
 		BoardsPath: path.Join("..", config.DefaultBoardsPath),
 	}
-	brdService := service.NewBoardService(settings)
+	brdService := service.NewBoardService(settings, &launchpad.MockClient{})
 	return settings, brdService
 }
 

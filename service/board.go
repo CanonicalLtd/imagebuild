@@ -6,6 +6,7 @@ package service
 import (
 	"github.com/CanonicalLtd/imagebuild/config"
 	"github.com/CanonicalLtd/imagebuild/domain"
+	"github.com/CanonicalLtd/imagebuild/launchpad"
 	"io/ioutil"
 	"log"
 
@@ -15,19 +16,22 @@ import (
 // Board interface for the service
 type Board interface {
 	List() []domain.Board
+	Build(img domain.BuildRequest) error
 }
 
 // BoardService implements the board service
 type BoardService struct {
-	boards   []domain.Board
-	Settings *config.Settings
+	boards    []domain.Board
+	Settings  *config.Settings
+	Launchpad launchpad.BuildClient
 }
 
 // NewBoardService creates a board service
-func NewBoardService(settings *config.Settings) *BoardService {
+func NewBoardService(settings *config.Settings, lp launchpad.BuildClient) *BoardService {
 	brd := &BoardService{
-		boards:   []domain.Board{},
-		Settings: settings,
+		boards:    []domain.Board{},
+		Settings:  settings,
+		Launchpad: lp,
 	}
 	if err := brd.read(settings.BoardsPath); err != nil {
 		log.Println("Error reading boards:", err)
@@ -49,4 +53,9 @@ func (brd *BoardService) read(path string) error {
 // List returns the list of boards
 func (brd *BoardService) List() []domain.Board {
 	return brd.boards
+}
+
+// Build starts an image build
+func (brd *BoardService) Build(img domain.BuildRequest) error {
+	return brd.Launchpad.Build(img.BoardID, img.OSID)
 }

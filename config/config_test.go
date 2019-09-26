@@ -26,14 +26,24 @@ func TestParseArgs(t *testing.T) {
 	}
 
 	tests := []struct {
-		name string
-		want *Settings
+		name     string
+		want     *Settings
+		lpToken  string
+		lpSecret string
 	}{
-		{"valid", wantDefault},
-		{"valid-9000", want9000},
+		{"valid", wantDefault, "abc", "def"},
+		{"valid-9000", want9000, "abc", "def"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			if len(tt.lpToken) > 0 {
+				os.Setenv("LPTOKEN", tt.lpToken)
+				tt.want.LPToken = tt.lpToken
+			}
+			if len(tt.lpSecret) > 0 {
+				os.Setenv("LPSECRET", tt.lpSecret)
+				tt.want.LPSecret = tt.lpSecret
+			}
 			if tt.want.Port != DefaultPort {
 				os.Setenv("PORT", tt.want.Port)
 			}

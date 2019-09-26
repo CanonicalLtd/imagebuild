@@ -13,3 +13,11 @@ type Board struct {
 		Version string `yaml:"version" json:"version"`
 	} `yaml:"os" json:"os"`
 }
+
+// BuildRequest is the request to initiate a build
+type BuildRequest struct {
+	BoardID  string   `json:"boardId"`
+	OSID     string   `json:"osId"`
+	Snaps    []string `json:"snaps"`
+	Packages []string `json:"packages"`
+}
