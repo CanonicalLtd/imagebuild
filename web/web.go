@@ -12,6 +12,7 @@ import (
 	"path"
 )
 
+// Web implements the web service
 type Web struct {
 	Settings *config.Settings
 	BoardSrv service.Board
@@ -25,6 +26,7 @@ func NewWebService(settings *config.Settings, brdSrv service.Board) *Web {
 	}
 }
 
+// Start the web service
 func (srv Web) Start() error {
 	fmt.Printf("Starting service on port %s\n", srv.Settings.Port)
 	return http.ListenAndServe(srv.Settings.Port, srv.Router())
