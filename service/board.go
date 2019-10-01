@@ -16,7 +16,7 @@ import (
 // Board interface for the service
 type Board interface {
 	List() []domain.Board
-	Build(img domain.BuildRequest) error
+	Build(img *domain.BuildRequest) (string, error)
 }
 
 // BoardService implements the board service
@@ -56,6 +56,6 @@ func (brd *BoardService) List() []domain.Board {
 }
 
 // Build starts an image build
-func (brd *BoardService) Build(img domain.BuildRequest) error {
+func (brd *BoardService) Build(img *domain.BuildRequest) (string, error) {
 	return brd.Launchpad.Build(img.BoardID, img.OSID)
 }

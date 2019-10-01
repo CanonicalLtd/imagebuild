@@ -25,10 +25,38 @@ type BoardsResponse struct {
 	Boards []domain.Board `json:"boards"`
 }
 
+// BuildResponse is the JSON response to list snaps
+type BuildResponse struct {
+	StandardResponse
+	BuildURL string `json:"buildURL"`
+}
+
+// formatStandardResponse returns a JSON response from an API method, indicating success or failure
+func formatStandardResponse(code, message string, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := StandardResponse{Code: code, Message: message}
+
+	if len(code) > 0 {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
 // formatBoardsResponse returns a JSON response from a snap list API method
 func formatBoardsResponse(boards []domain.Board, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := BoardsResponse{StandardResponse{}, boards}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatBuildResponse returns a JSON response from a snap list API method
+func formatBuildResponse(b string, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := BuildResponse{StandardResponse{}, b}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)

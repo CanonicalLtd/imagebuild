@@ -8,20 +8,23 @@ import (
 	"fmt"
 	"github.com/CanonicalLtd/imagebuild/config"
 	"github.com/gomodule/oauth1/oauth"
-	"log"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"path"
+	"strings"
 )
 
 const apiURL = "https://api.launchpad.net/devel"
 
 // BuildClient defines the interface for the Launchpad client for building images
 type BuildClient interface {
-	Build(boardID, osID string) error
+	Build(boardID, osID string) (string, error)
 }
 
 // Client defines a Launchpad client
 type Client struct {
+	settings    *config.Settings
 	oauthClient OAuthClient
 	credentials oauth.Credentials
 }
@@ -29,6 +32,7 @@ type Client struct {
 // NewClient creates a new Launchpad client
 func NewClient(settings *config.Settings, authClient OAuthClient) *Client {
 	return &Client{
+		settings:    settings,
 		oauthClient: authClient,
 		credentials: oauth.Credentials{
 			Token:  settings.LPToken,
@@ -38,19 +42,19 @@ func NewClient(settings *config.Settings, authClient OAuthClient) *Client {
 }
 
 // Build starts a build
-func (cli *Client) Build(boardID, osID string) error {
+func (cli *Client) Build(boardID, osID string) (string, error) {
 	// Get the metadata for the selection
-	distroArchSeries, meta, err := cli.buildMetadata(boardID, osID)
+	distroArchSeries, liveFS, meta, err := cli.buildMetadata(boardID, osID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Start the build
-	return cli.requestBuild(distroArchSeries, meta)
+	return cli.requestBuild(distroArchSeries, liveFS, meta)
 }
 
 // requestBuild starts a new build as per https://launchpad.net/+apidoc/devel.html#livefs-requestBuild
-func (cli *Client) requestBuild(das, metadata string) error {
+func (cli *Client) requestBuild(das, liveFS, metadata string) (string, error) {
 	// Set the parameters
 	params := map[string][]string{
 		"ws.op":              {"requestBuild"},
@@ -63,19 +67,40 @@ func (cli *Client) requestBuild(das, metadata string) error {
 	// Set up the URL
 	u, err := url.Parse(apiURL)
 	if err != nil {
-		return err
+		return "", err
 	}
-	u.Path = path.Join("livefs", "requestBuild")
+	u.Path = path.Join(u.Path, "~"+cli.settings.LPOwner, liveFS)
 
 	// Call the API
-	resp, err := cli.oauthClient.Post(nil, &cli.credentials, u.String(), params)
-	log.Println(err)
-	log.Println(resp.Body)
-	return err
+	resp, err := cli.httpDo("POST", u, params)
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 201 {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		return "", fmt.Errorf("error submitting %d build: %v", resp.StatusCode, string(bodyBytes))
+	}
+
+	return resp.Header.Get("Location"), err
+}
+
+// httpDo performs the HTTP method, setting the OAuth authorization header
+func (cli *Client) httpDo(method string, u *url.URL, form url.Values) (*http.Response, error) {
+	// Create the request
+	req, err := http.NewRequest(method, u.String(), strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	// Set the request header with the correct credentials, and the correct consumer
+	if err := cli.oauthClient.SetAuthorizationHeader(req.Header, &cli.credentials, method, u, form); err != nil {
+		return nil, err
+	}
+
+	return doRequest(req)
 }
 
 // BuildMetadata returns the metadata override for the build
-func (cli *Client) buildMetadata(boardID, osID string) (string, string, error) {
+func (cli *Client) buildMetadata(boardID, osID string) (string, string, string, error) {
 	// Get the metadata for the board and OS
 	key := fmt.Sprintf("%s-%s", boardID, osID)
 	meta := boards[key]
@@ -83,7 +108,11 @@ func (cli *Client) buildMetadata(boardID, osID string) (string, string, error) {
 	// Serialize the data as JSON
 	b, err := json.Marshal(meta)
 	if err != nil {
-		return "", "", err
+		return "", "", "", err
 	}
-	return meta.DistroArchSeries, string(b), err
+	return meta.DistroArchSeries, meta.LiveFS, string(b), err
+}
+
+var doRequest = func(req *http.Request) (*http.Response, error) {
+	return http.DefaultClient.Do(req)
 }

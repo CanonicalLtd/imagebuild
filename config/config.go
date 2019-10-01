@@ -15,6 +15,7 @@ const (
 	DefaultIndexTemplate = "index.html"
 	DefaultBoardsPath    = "boards.yaml"
 	DefaultStoreURL      = "https://api.snapcraft.io/api/v1/"
+	DefaultConsumer      = "image.build"
 )
 
 // Settings defines the application configuration
@@ -24,8 +25,10 @@ type Settings struct {
 	IndexTemplate string
 	BoardsPath    string
 	StoreURL      string
+	LPOwner       string
 	LPToken       string
 	LPSecret      string
+	LPConsumer    string
 }
 
 // ParseArgs checks the environment variables
@@ -34,8 +37,8 @@ func ParseArgs() *Settings {
 		port = DefaultPort
 	)
 
-	if len(os.Getenv("LPTOKEN")) == 0 || len(os.Getenv("LPSECRET")) == 0 {
-		log.Fatalln("The Launchpad access token and secret must be supplied (LPTOKEN, LPSECRET)")
+	if len(os.Getenv("LPTOKEN")) == 0 || len(os.Getenv("LPSECRET")) == 0 || len(os.Getenv("LPOWNER")) == 0 {
+		log.Fatalln("The Launchpad access token, secret and owner must be supplied (LPTOKEN, LPSECRET, LPOWNER)")
 	}
 
 	if len(os.Getenv("PORT")) > 0 {
@@ -48,7 +51,9 @@ func ParseArgs() *Settings {
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
 		StoreURL:      DefaultStoreURL,
+		LPConsumer:    DefaultConsumer,
 		LPToken:       os.Getenv("LPTOKEN"),
 		LPSecret:      os.Getenv("LPSECRET"),
+		LPOwner:       os.Getenv("LPOWNER"),
 	}
 }

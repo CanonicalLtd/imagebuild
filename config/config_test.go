@@ -16,6 +16,8 @@ func TestParseArgs(t *testing.T) {
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
 		StoreURL:      DefaultStoreURL,
+		LPConsumer:    DefaultConsumer,
+		LPOwner:       "johndoe",
 	}
 	want9000 := &Settings{
 		Port:          ":9000",
@@ -23,6 +25,8 @@ func TestParseArgs(t *testing.T) {
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
 		StoreURL:      DefaultStoreURL,
+		LPConsumer:    DefaultConsumer,
+		LPOwner:       "johndoe",
 	}
 
 	tests := []struct {
@@ -30,9 +34,10 @@ func TestParseArgs(t *testing.T) {
 		want     *Settings
 		lpToken  string
 		lpSecret string
+		lpOwner  string
 	}{
-		{"valid", wantDefault, "abc", "def"},
-		{"valid-9000", want9000, "abc", "def"},
+		{"valid", wantDefault, "abc", "def", "johndoe"},
+		{"valid-9000", want9000, "abc", "def", "johndoe"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -43,6 +48,10 @@ func TestParseArgs(t *testing.T) {
 			if len(tt.lpSecret) > 0 {
 				os.Setenv("LPSECRET", tt.lpSecret)
 				tt.want.LPSecret = tt.lpSecret
+			}
+			if len(tt.lpOwner) > 0 {
+				os.Setenv("LPOWNER", tt.lpOwner)
+				tt.want.LPOwner = tt.lpOwner
 			}
 			if tt.want.Port != DefaultPort {
 				os.Setenv("PORT", tt.want.Port)

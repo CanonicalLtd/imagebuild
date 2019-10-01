@@ -87,7 +87,7 @@ func TestBoardService_Build(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			brd := NewBoardService(settings, &launchpad.MockClient{})
-			if err := brd.Build(tt.args.img); (err != nil) != tt.wantErr {
+			if _, err := brd.Build(&tt.args.img); (err != nil) != tt.wantErr {
 				t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

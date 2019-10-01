@@ -12,16 +12,18 @@ import (
 
 // OAuthClient defines the interface for the oauth methods we need
 type OAuthClient interface {
-	//Get(client *http.Client, credentials *oauth.Credentials, urlStr string, form url.Values) (*http.Response, error)
-	Post(client *http.Client, credentials *oauth.Credentials, urlStr string, form url.Values) (*http.Response, error)
+	SetAuthorizationHeader(header http.Header, credentials *oauth.Credentials, method string, u *url.URL, form url.Values) error
 }
 
 // NewOAuthClient creates an implementation of a standard oauth1 client
 func NewOAuthClient(settings *config.Settings) *oauth.Client {
 	return &oauth.Client{
+		TemporaryCredentialRequestURI: "https://launchpad.net/+request-token",
+		ResourceOwnerAuthorizationURI: "https://launchpad.net/+authorize-token",
+		TokenRequestURI:               "https://launchpad.net/+access-token",
 		Credentials: oauth.Credentials{
-			Token:  settings.LPToken,
-			Secret: settings.LPSecret,
+			Token: settings.LPConsumer, // Note that the consumer is used here, not the access token
 		},
+		SignatureMethod: oauth.PLAINTEXT,
 	}
 }

@@ -37,3 +37,10 @@ func parseBoardsResponse(r io.Reader) (BoardsResponse, error) {
 	err := json.NewDecoder(r).Decode(&result)
 	return result, err
 }
+
+func parseBuildResponse(r io.Reader) (BuildResponse, error) {
+	// Parse the response
+	result := BuildResponse{}
+	err := json.NewDecoder(r).Decode(&result)
+	return result, err
+}

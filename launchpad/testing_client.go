@@ -4,6 +4,7 @@
 package launchpad
 
 import (
+	"fmt"
 	"github.com/gomodule/oauth1/oauth"
 	"io/ioutil"
 	"net/http"
@@ -16,17 +17,28 @@ type MockAuthClient struct {
 	body string
 }
 
-// Post issues a POST with the specified form.
-func (c *MockAuthClient) Post(client *http.Client, credentials *oauth.Credentials, urlStr string, form url.Values) (*http.Response, error) {
-	return &http.Response{
-		Body: ioutil.NopCloser(strings.NewReader(c.body)),
-	}, nil
+// SetAuthorizationHeader mocks setting the oauth headers
+func (c *MockAuthClient) SetAuthorizationHeader(header http.Header, credentials *oauth.Credentials, method string, u *url.URL, form url.Values) error {
+	return nil
 }
 
 // MockClient mocks the Launchpad build API
 type MockClient struct{}
 
 // Build mocks the build submission method
-func (cli *MockClient) Build(boardID, osID string) error {
-	return nil
+func (cli *MockClient) Build(boardID, osID string) (string, error) {
+	if boardID == "error" {
+		return "", fmt.Errorf("MOCK error building image")
+	}
+	return "", nil
+}
+
+// mockDoRequest mocks performing an HTTP request
+func mockDoRequest(req *http.Request) (*http.Response, error) {
+	return &http.Response{StatusCode: 201, Body: ioutil.NopCloser(strings.NewReader(""))}, nil
+}
+
+// mockDoRequestError mocks performing an HTTP request with an error
+func mockDoRequestError(req *http.Request) (*http.Response, error) {
+	return &http.Response{StatusCode: 401, Body: ioutil.NopCloser(strings.NewReader(""))}, nil
 }
