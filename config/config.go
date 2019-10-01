@@ -14,6 +14,7 @@ const (
 	DefaultDocRoot       = "static"
 	DefaultIndexTemplate = "index.html"
 	DefaultBoardsPath    = "boards.yaml"
+	DefaultBuildsPath    = "builds.yaml"
 	DefaultStoreURL      = "https://api.snapcraft.io/api/v1/"
 	DefaultConsumer      = "image.build"
 )
@@ -24,6 +25,7 @@ type Settings struct {
 	DocRoot       string
 	IndexTemplate string
 	BoardsPath    string
+	BuildsPath    string
 	StoreURL      string
 	LPOwner       string
 	LPToken       string
@@ -50,6 +52,7 @@ func ParseArgs() *Settings {
 		DocRoot:       DefaultDocRoot,
 		IndexTemplate: DefaultIndexTemplate,
 		BoardsPath:    DefaultBoardsPath,
+		BuildsPath:    DefaultBuildsPath,
 		StoreURL:      DefaultStoreURL,
 		LPConsumer:    DefaultConsumer,
 		LPToken:       os.Getenv("LPTOKEN"),

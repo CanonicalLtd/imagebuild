@@ -39,7 +39,7 @@ func NewBoardService(settings *config.Settings, lp launchpad.BuildClient) *Board
 	return brd
 }
 
-// Read reads the boards from the YAML file
+// read reads the boards from the YAML file
 func (brd *BoardService) read(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {

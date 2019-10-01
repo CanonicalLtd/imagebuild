@@ -30,8 +30,8 @@ type Client struct {
 }
 
 // NewClient creates a new Launchpad client
-func NewClient(settings *config.Settings, authClient OAuthClient) *Client {
-	return &Client{
+func NewClient(settings *config.Settings, authClient OAuthClient) (*Client, error) {
+	client := &Client{
 		settings:    settings,
 		oauthClient: authClient,
 		credentials: oauth.Credentials{
@@ -39,6 +39,11 @@ func NewClient(settings *config.Settings, authClient OAuthClient) *Client {
 			Secret: settings.LPSecret,
 		},
 	}
+
+	// Read the metadata for the board configurations
+	err := client.readMetadata(settings.BuildsPath)
+
+	return client, err
 }
 
 // Build starts a build

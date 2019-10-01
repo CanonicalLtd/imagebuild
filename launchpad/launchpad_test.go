@@ -39,7 +39,7 @@ func TestClient_Build(t *testing.T) {
 				doRequest = mockDoRequestError
 			}
 
-			cli := NewClient(settings, tt.fields.client)
+			cli, _ := NewClient(settings, tt.fields.client)
 			if _, err := cli.Build(tt.args.boardID, tt.args.osID); (err != nil) != tt.wantErr {
 				t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -54,6 +54,7 @@ func TestClient_buildMetadata(t *testing.T) {
 	settings := &config.Settings{
 		DocRoot:    "../static",
 		BoardsPath: path.Join("..", config.DefaultBoardsPath),
+		BuildsPath: path.Join("..", config.DefaultBuildsPath),
 	}
 	type args struct {
 		boardID string
@@ -75,7 +76,7 @@ func TestClient_buildMetadata(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cli := NewClient(settings, &MockAuthClient{})
+			cli, _ := NewClient(settings, &MockAuthClient{})
 			got, got1, got2, err := cli.buildMetadata(tt.args.boardID, tt.args.osID)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("buildMetadata() error = %v, wantErr %v", err, tt.wantErr)
@@ -120,7 +121,7 @@ func TestClient_requestBuild(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cli := NewClient(settings, tt.fields.client)
+			cli, _ := NewClient(settings, tt.fields.client)
 			if _, err := cli.requestBuild(tt.args.das, tt.args.liveFS, tt.args.metadata); (err != nil) != tt.wantErr {
 				t.Errorf("requestBuild() error = %v, wantErr %v", err, tt.wantErr)
 			}

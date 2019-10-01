@@ -24,11 +24,11 @@ func (srv Web) Build(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	buildUrl, err := srv.BoardSrv.Build(bld)
+	buildURL, err := srv.BoardSrv.Build(bld)
 	if err != nil {
 		formatStandardResponse("Build", err.Error(), w)
 	}
-	formatBuildResponse(buildUrl, w)
+	formatBuildResponse(buildURL, w)
 }
 
 func decodeBuildRequest(w http.ResponseWriter, r *http.Request) (*domain.BuildRequest, error) {

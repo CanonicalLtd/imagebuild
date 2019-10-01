@@ -14,6 +14,15 @@ type Board struct {
 	} `yaml:"os" json:"os"`
 }
 
+// Metadata describes the parameters for the API for a board and OS
+type Metadata struct {
+	DistroArchSeries string `yaml:"distro_arch_series" json:"-"`
+	LiveFS           string `yaml:"livefs" json:"-"`
+	Project          string `yaml:"project" json:"project,omitempty"`
+	SubArch          string `yaml:"subarch" json:"subarch,omitempty"`
+	ImageFormat      string `yaml:"image_format" json:"image_format,omitempty"`
+}
+
 // BuildRequest is the request to initiate a build
 type BuildRequest struct {
 	BoardID  string   `json:"boardId"`

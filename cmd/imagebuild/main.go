@@ -17,7 +17,10 @@ func main() {
 
 	// Set up the dependency chain
 	authClient := launchpad.NewOAuthClient(settings)
-	lp := launchpad.NewClient(settings, authClient)
+	lp, err := launchpad.NewClient(settings, authClient)
+	if err != nil {
+		log.Fatalln("Error initialising Launchpad client:", err)
+	}
 	brdSrv := service.NewBoardService(settings, lp)
 	srv := web.NewWebService(settings, brdSrv)
 
