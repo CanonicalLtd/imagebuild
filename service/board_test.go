@@ -67,7 +67,7 @@ func TestNewBoardService(t *testing.T) {
 	}
 }
 
-func TestBoardService_Build(t *testing.T) {
+func TestBoardService_BuildAndGet(t *testing.T) {
 	settings := &config.Settings{BoardsPath: path.Join("..", config.DefaultBoardsPath)}
 	img1 := domain.BuildRequest{
 		BoardID: "raspberrypi2",
@@ -89,6 +89,10 @@ func TestBoardService_Build(t *testing.T) {
 			brd := NewBoardService(settings, &launchpad.MockClient{})
 			if _, err := brd.Build(&tt.args.img); (err != nil) != tt.wantErr {
 				t.Errorf("Build() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			if _, err := brd.GetLiveFSBuild("url"); (err != nil) != tt.wantErr {
+				t.Errorf("GetLiveFSBuild() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

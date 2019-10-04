@@ -4,10 +4,6 @@
 package web
 
 import (
-	"encoding/json"
-	"github.com/CanonicalLtd/imagebuild/domain"
-	"io"
-	"log"
 	"net/http"
 )
 
@@ -27,25 +23,22 @@ func (srv Web) Build(w http.ResponseWriter, r *http.Request) {
 	buildURL, err := srv.BoardSrv.Build(bld)
 	if err != nil {
 		formatStandardResponse("Build", err.Error(), w)
+		return
 	}
 	formatBuildResponse(buildURL, w)
 }
 
-func decodeBuildRequest(w http.ResponseWriter, r *http.Request) (*domain.BuildRequest, error) {
-	defer r.Body.Close()
-
-	// Decode the JSON body
-	bld := domain.BuildRequest{}
-	err := json.NewDecoder(r.Body).Decode(&bld)
-	switch {
-	// Check we have some data
-	case err == io.EOF:
-		formatStandardResponse("NoData", "No data supplied.", w)
-		log.Println("Build request: no data supplied.")
-		// Check for parsing errors
-	case err != nil:
-		formatStandardResponse("BadData", err.Error(), w)
-		log.Println("Build request:", err)
+// GetLiveFSBuild fetches a liveFS build details
+func (srv Web) GetLiveFSBuild(w http.ResponseWriter, r *http.Request) {
+	bld, err := decodeGetBuildRequest(w, r)
+	if err != nil {
+		return
 	}
-	return &bld, err
+
+	build, err := srv.BoardSrv.GetLiveFSBuild(bld.Link)
+	if err != nil {
+		formatStandardResponse("Build", err.Error(), w)
+		return
+	}
+	formatLiveFSBuildResponse(build, w)
 }

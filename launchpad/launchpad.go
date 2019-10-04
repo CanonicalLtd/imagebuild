@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/CanonicalLtd/imagebuild/config"
+	"github.com/CanonicalLtd/imagebuild/domain"
 	"github.com/gomodule/oauth1/oauth"
 	"io/ioutil"
 	"net/http"
@@ -20,6 +21,7 @@ const apiURL = "https://api.launchpad.net/devel"
 // BuildClient defines the interface for the Launchpad client for building images
 type BuildClient interface {
 	Build(boardID, osID string) (string, error)
+	GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error)
 }
 
 // Client defines a Launchpad client

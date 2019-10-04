@@ -44,3 +44,10 @@ func parseBuildResponse(r io.Reader) (BuildResponse, error) {
 	err := json.NewDecoder(r).Decode(&result)
 	return result, err
 }
+
+func parseLiveFSBuildResponse(r io.Reader) (LiveFSBuildResponse, error) {
+	// Parse the response
+	result := LiveFSBuildResponse{}
+	err := json.NewDecoder(r).Decode(&result)
+	return result, err
+}

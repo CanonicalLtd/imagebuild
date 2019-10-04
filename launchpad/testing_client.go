@@ -5,6 +5,7 @@ package launchpad
 
 import (
 	"fmt"
+	"github.com/CanonicalLtd/imagebuild/domain"
 	"github.com/gomodule/oauth1/oauth"
 	"io/ioutil"
 	"net/http"
@@ -31,6 +32,14 @@ func (cli *MockClient) Build(boardID, osID string) (string, error) {
 		return "", fmt.Errorf("MOCK error building image")
 	}
 	return "", nil
+}
+
+// GetLiveFSBuild mocks the live build record retrieval
+func (cli *MockClient) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
+	if rawURL == "error" {
+		return nil, fmt.Errorf("MOCK error fetching build")
+	}
+	return &domain.LiveFSBuild{}, nil
 }
 
 // mockDoRequest mocks performing an HTTP request

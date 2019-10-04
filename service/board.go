@@ -17,6 +17,7 @@ import (
 type Board interface {
 	List() []domain.Board
 	Build(img *domain.BuildRequest) (string, error)
+	GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error)
 }
 
 // BoardService implements the board service
@@ -58,4 +59,9 @@ func (brd *BoardService) List() []domain.Board {
 // Build starts an image build
 func (brd *BoardService) Build(img *domain.BuildRequest) (string, error) {
 	return brd.Launchpad.Build(img.BoardID, img.OSID)
+}
+
+// GetLiveFSBuild retrieves the details of an image build
+func (brd *BoardService) GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error) {
+	return brd.Launchpad.GetLiveFSBuild(urlString)
 }

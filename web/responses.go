@@ -31,6 +31,12 @@ type BuildResponse struct {
 	BuildURL string `json:"buildURL"`
 }
 
+// LiveFSBuildResponse is the JSON response to list snaps
+type LiveFSBuildResponse struct {
+	StandardResponse
+	Build domain.LiveFSBuild `json:"build"`
+}
+
 // formatStandardResponse returns a JSON response from an API method, indicating success or failure
 func formatStandardResponse(code, message string, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
@@ -57,6 +63,15 @@ func formatBoardsResponse(boards []domain.Board, w http.ResponseWriter) {
 func formatBuildResponse(b string, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", JSONHeader)
 	response := BuildResponse{StandardResponse{}, b}
+
+	// Encode the response as JSON
+	encodeResponse(w, response)
+}
+
+// formatLiveFSBuildResponse returns a JSON response from a snap list API method
+func formatLiveFSBuildResponse(b *domain.LiveFSBuild, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", JSONHeader)
+	response := LiveFSBuildResponse{StandardResponse{}, *b}
 
 	// Encode the response as JSON
 	encodeResponse(w, response)
