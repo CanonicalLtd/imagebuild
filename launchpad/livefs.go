@@ -22,6 +22,9 @@ func (cli *Client) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
 
 	// Call the API
 	resp, err := cli.httpDo("GET", u, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	if resp.StatusCode != 200 {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
