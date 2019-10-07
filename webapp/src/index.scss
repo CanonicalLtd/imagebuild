@@ -1,0 +1,213 @@
+// Image Builder
+// Copyright 2019 Canonical Ltd.  All rights reserved.
+
+// Main theme changes
+$color-brand: #11791e;
+$color-link: #111111;
+$color-accent: #2d2d2d;
+
+$button-text-color: #f7f7f7;
+
+
+@import 'node_modules/vanilla-framework/scss/build';
+
+/* no pesky blue border on buttons */
+button:focus {
+  outline:none !important;
+}
+
+.first {
+  margin-top: 3em;
+}
+
+.header {
+  background-image: url("/static/images/aubergine.png");
+}
+
+#footer {
+  margin: 2em 0;
+  padding-top: 2em;
+  border-top: 1px solid #cccccc;
+}
+
+.footer p {
+  font-size: 16px;
+}
+
+.p-footer__link {
+  margin-right: 1rem;
+  position: relative;
+  color: #111;
+}
+
+.p-footer__link:visited {
+  color: #111;
+}
+
+.p-footer__links {
+  margin: 0;
+  padding: 0;
+}
+
+.p-footer__item {
+  font-size: 16px;
+  display: inline-block;
+}
+
+.p-footer__link:after {
+  content: "\00b7";
+  display: inline-block;
+  font-size: 1.5rem;
+  position: absolute;
+  right: -.75rem;
+}
+
+.p-footer__item:last-child a:after {
+  opacity: 0;
+}
+
+#navigation.p-navigation:after {
+  height: 0;
+}
+
+.header-slim {
+  background-color: #2d2d2d;
+  color: #ffffff;
+}
+
+.header-slim h1 {
+  font-size: large;
+  font-weight: 300;
+}
+
+.p-navigation a {
+  color: $button-text-color !important;
+}
+
+.content {
+  min-height: 500px;
+}
+
+.board {
+  margin: 10px 20px 10px 0;
+  padding: 10px;
+  display: inline-block;
+  width: 300px;
+  height: 210px;
+  overflow: hidden;
+}
+
+.board img {
+  width: 50px;
+}
+
+.os {
+  margin: 10px 20px 10px 0;
+  display: inline-block;
+  width: 250px;
+  height: 130px;
+  overflow: hidden;
+}
+
+.os h3 {
+  background-image: url('/static/images/ubuntu.png');
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-size: 30px;
+  padding-left: 35px;
+}
+
+.p-search-box__button {
+  margin-top: 0 !important;
+}
+
+.p-search-box__reset {
+  margin: 0 !important;
+}
+
+.p-search-box__input {
+  margin-top: 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+pre.console {
+  background-color: #333;
+  color: #f7f7f7;
+  font-family: "Ubuntu Mono", Consolas, Monaco, Courier, monospace;
+}
+
+.breadcrumbs {
+  background-color: #f6f6f6;
+}
+
+.active a {
+  color: #007AA6;
+}
+
+.snaps {
+  border-right: 1px solid #dddddd;
+  padding-right: 30px;
+}
+
+.store img {
+  float: left;
+  margin: 10px 10px 0 0;
+}
+
+.store td {
+  vertical-align: middle;
+}
+
+.store button {
+  float: right;
+  margin: 10px 10px 0 0;
+}
+
+.pagination .active {
+  color: #007AA6;
+}
+
+.hover {
+  position: relative;
+
+  &:hover &__no-hover {
+    opacity: 0;
+  }
+
+  &:hover &__hover {
+    opacity: 1;
+  }
+
+  &__hover {
+    /*position: absolute;
+    top: 0;*/
+    opacity: 0;
+  }
+
+  &__no-hover {
+    opacity: 1;
+  }
+}
+
+.hover button {
+  margin: 0;
+}
+
+.lean {
+  padding: 0;
+  margin: 0;
+}
+
+.summary i {
+  margin-right: 1em;
+}
+
+.summary p {
+  margin-bottom: 0.5rem;
+}
