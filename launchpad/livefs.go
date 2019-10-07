@@ -13,6 +13,11 @@ import (
 	"net/url"
 )
 
+// Launchpad constants
+const (
+	SuccessfullyBuilt = "Successfully built"
+)
+
 // GetLiveFSBuild fetches a build's details
 func (cli *Client) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
 	u, err := url.Parse(rawURL)
@@ -39,7 +44,7 @@ func (cli *Client) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
 	}
 
 	// Get the download URL if the build is completed successfully
-	if liveBuild.State == "Successfully built" {
+	if liveBuild.State == SuccessfullyBuilt {
 		err = cli.getBuildURL(u, liveBuild)
 	}
 	return liveBuild, err

@@ -18,5 +18,17 @@ RUN apt-get install -y ca-certificates
 COPY --from=builder1 /go/bin/imagebuild .
 COPY --from=builder2 build/ ./static/
 COPY boards.yaml .
+COPY builds.yaml .
+
+# Set params from the environment variables
+ARG LPTOKEN=""
+ARG LPCONSUMER=""
+ARG LPSECRET=""
+ARG LPOWNER=""
+ENV LPTOKEN="${LPTOKEN}"
+ENV LPCONSUMER="${LPCONSUMER}"
+ENV LPSECRET="${LPSECRET}"
+ENV LPOWNER="${LPOWNER}"
+
 EXPOSE 8000
 ENTRYPOINT ./imagebuild
