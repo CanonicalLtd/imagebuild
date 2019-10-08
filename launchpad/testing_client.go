@@ -27,8 +27,8 @@ func (c *MockAuthClient) SetAuthorizationHeader(header http.Header, credentials 
 type MockClient struct{}
 
 // Build mocks the build submission method
-func (cli *MockClient) Build(boardID, osID string) (string, error) {
-	if boardID == "error" {
+func (cli *MockClient) Build(bld *domain.BuildRequest) (string, error) {
+	if bld.BoardID == "error" {
 		return "", fmt.Errorf("MOCK error building image")
 	}
 	return "", nil
