@@ -13,7 +13,6 @@ class Breadcrumbs extends Component {
 
         if (r.section==='confirm') {
             let board =  getSelection();
-            console.log(board)
             r.section = 'boards'
             r.sectionId = board.board.id
             r.subsection = board.os.type + board.os.version

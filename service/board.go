@@ -58,7 +58,7 @@ func (brd *BoardService) List() []domain.Board {
 
 // Build starts an image build
 func (brd *BoardService) Build(img *domain.BuildRequest) (string, error) {
-	return brd.Launchpad.Build(img.BoardID, img.OSID)
+	return brd.Launchpad.Build(img)
 }
 
 // GetLiveFSBuild retrieves the details of an image build

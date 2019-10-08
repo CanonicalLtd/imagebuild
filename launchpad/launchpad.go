@@ -20,7 +20,7 @@ const apiURL = "https://api.launchpad.net/devel"
 
 // BuildClient defines the interface for the Launchpad client for building images
 type BuildClient interface {
-	Build(boardID, osID string) (string, error)
+	Build(img *domain.BuildRequest) (string, error)
 	GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error)
 }
 
@@ -49,9 +49,9 @@ func NewClient(settings *config.Settings, authClient OAuthClient) (*Client, erro
 }
 
 // Build starts a build
-func (cli *Client) Build(boardID, osID string) (string, error) {
+func (cli *Client) Build(img *domain.BuildRequest) (string, error) {
 	// Get the metadata for the selection
-	distroArchSeries, liveFS, meta, err := cli.buildMetadata(boardID, osID)
+	distroArchSeries, liveFS, meta, err := cli.buildMetadata(img)
 	if err != nil {
 		return "", err
 	}
@@ -65,7 +65,7 @@ func (cli *Client) requestBuild(das, liveFS, metadata string) (string, error) {
 	// Set the parameters
 	params := map[string][]string{
 		"ws.op":              {"requestBuild"},
-		"pocket":             {"Release"},
+		"pocket":             {"Updates"},
 		"archive":            {"https://api.launchpad.net/1.0/ubuntu/+archive/primary"},
 		"distro_arch_series": {das}, // e.g. https://api.launchpad.net/1.0/ubuntu/xenial/armhf
 		"metadata_override":  {metadata},
@@ -107,10 +107,18 @@ func (cli *Client) httpDo(method string, u *url.URL, form url.Values) (*http.Res
 }
 
 // BuildMetadata returns the metadata override for the build
-func (cli *Client) buildMetadata(boardID, osID string) (string, string, string, error) {
+func (cli *Client) buildMetadata(img *domain.BuildRequest) (string, string, string, error) {
 	// Get the metadata for the board and OS
-	key := fmt.Sprintf("%s-%s", boardID, osID)
+	key := fmt.Sprintf("%s-%s", img.BoardID, img.OSID)
 	meta := boards[key]
+
+	// Set the snaps and packages, if they are provided
+	if img.Snaps != nil && len(img.Snaps) > 0 {
+		meta.Snaps = img.Snaps
+	}
+	if img.Packages != nil && len(img.Packages) > 0 {
+		meta.Packages = img.Packages
+	}
 
 	// Serialize the data as JSON
 	b, err := json.Marshal(meta)

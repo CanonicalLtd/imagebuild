@@ -8,6 +8,7 @@ export default {
     'board': 'Board',
     'boards': 'Boards',
     'build': "Let's go!",
+    'build-in-progress': "Build in progress",
     'choose-applications': 'Choose the Pre-installed Applications',
     'choose-applications-desc': 'Select the applications that will be pre-installed on the device. For Ubuntu Core this will be snaps, for Ubuntu Classic it will be snaps or packages.',
     'choose-board': 'Choose Board',

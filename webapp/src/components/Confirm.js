@@ -13,11 +13,11 @@ class Confirm extends Component {
             messages: [],
             buildURL: '',
             downloads: [],
+            building: false,
         };
     }
 
     getBuildStatus() {
-        //if (!this.state.build.buildstate) return
         let bld = {link: this.state.buildURL}
         let b = {}
 
@@ -36,6 +36,8 @@ class Confirm extends Component {
         .then( ()=> {
             if ((b.buildstate !== 'Successfully built') && (b.buildstate !== 'Failed to build')) {
                 this.poll()
+            } else {
+                this.setState({building: false})
             }
         })
     }
@@ -51,7 +53,7 @@ class Confirm extends Component {
 
         // Start the build
         api.buildRequest(bld).then(response => {
-            this.setState({buildURL: response.data.buildURL})
+            this.setState({buildURL: response.data.buildURL, building: true})
         }).then( ()=> {
             // Monitor the build status
             this.getBuildStatus()
@@ -90,10 +92,33 @@ class Confirm extends Component {
                 <h2>{T('downloads')}</h2>
                 {this.state.downloads.map(d => {
                     let parts = d.split('/')
-                    return <p><a href={d}>{parts[parts.length-1]}</a></p>
+                    let filename = parts[parts.length-1]
+                    console.log('---', filename)
+                    let extensions = filename.split('.')
+                    let suffix = extensions[extensions.length-1]
+                    if (suffix==='xz') {
+                        return <p><a href={d}>{filename}</a></p>
+                    }
                 })}
             </div>
         )
+    }
+
+    renderMessage() {
+        if (this.state.building) {
+            return (
+                <div>
+                    <img src="/static/images/ajax-loader.gif" /> {T('build-in-progress')}
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    {T('ready-to-build')} &nbsp;
+                    <button className="p-button--brand" onClick={this.handleBuild} disabled={this.state.building}>{T('build')}</button>
+                </div>
+            )
+        }
     }
 
     render() {
@@ -119,10 +144,7 @@ class Confirm extends Component {
                     </pre>
                 </div>
 
-                <div>
-                    {T('ready-to-build')} &nbsp;
-                    <button className="p-button--brand" onClick={this.handleBuild}>{T('build')}</button>
-                </div>
+                {this.renderMessage()}
 
                 <div className="row">
                     {this.renderConsole()}
