@@ -16,13 +16,14 @@ type Board struct {
 
 // Metadata describes the parameters for the API for a board and OS
 type Metadata struct {
-	DistroArchSeries string   `yaml:"distro_arch_series" json:"-"`
-	LiveFS           string   `yaml:"livefs" json:"-"`
-	Project          string   `yaml:"project" json:"project,omitempty"`
-	SubArch          string   `yaml:"subarch" json:"subarch,omitempty"`
-	ImageFormat      string   `yaml:"image_format" json:"image_format,omitempty"`
-	Snaps            []string `json:"extra_snaps,omitempty"`
-	Packages         []string `json:"extra_packages,omitempty"`
+	DistroSeries string   `yaml:"distro_series" json:"-"`
+	Arch         string   `yaml:"arch" json:"-"`
+	LiveFS       string   `yaml:"livefs" json:"-"`
+	Project      string   `yaml:"project" json:"project,omitempty"`
+	SubArch      string   `yaml:"subarch" json:"subarch,omitempty"`
+	ImageFormat  string   `yaml:"image_format" json:"image_format,omitempty"`
+	Snaps        []string `json:"extra_snaps,omitempty"`
+	Packages     []string `json:"extra_packages,omitempty"`
 }
 
 // LiveFSBuild is the build asset on Launchpad

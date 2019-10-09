@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/CanonicalLtd/imagebuild/domain"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // Launchpad constants
@@ -18,36 +18,61 @@ const (
 	SuccessfullyBuilt = "Successfully built"
 )
 
-// GetLiveFSBuild fetches a build's details
-func (cli *Client) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
+// getOrCreateLiveFS makes sure that the liveFS object exists in Launchpad
+func (cli *Client) getOrCreateLiveFS(rawURL, name, distroSeries, ownerLink string) error {
 	u, err := url.Parse(rawURL)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
+	// Fetch the livefs object
+	if err := cli.getLiveFS(u); err == nil {
+		// Object exists
+		return nil
+	}
+
+	// Create the livefs record
+	return cli.createLiveFS(name, distroSeries, ownerLink)
+}
+
+// getLiveFS fetches a liveFS object exists in Launchpad
+func (cli *Client) getLiveFS(u *url.URL) error {
 	// Call the API
 	resp, err := cli.httpDo("GET", u, nil)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
 	if resp.StatusCode != 200 {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
-		defer resp.Body.Close()
-		return nil, fmt.Errorf("error submitting %d build: %v", resp.StatusCode, string(bodyBytes))
+		return fmt.Errorf("status %d when fetching livefs %s", resp.StatusCode, u.String())
+	}
+	return nil
+}
+
+// createLiveFS creates a liveFS object exists in Launchpad
+func (cli *Client) createLiveFS(name, distroSeries, ownerLink string) error {
+	// Set the parameters
+	params := map[string][]string{
+		"ws.op":         {"new"},
+		"distro_series": {distroSeries}, // e.g. https://api.launchpad.net/1.0/ubuntu/xenial
+		"metadata":      {"{}"},
+		"name":          {name},
+		"owner":         {ownerLink},
 	}
 
-	// Parse the response
-	liveBuild, err := decodeLiveFSBuild(resp)
+	u, err := url.Parse(apiURL + "/livefses")
 	if err != nil {
-		return liveBuild, err
+		return err
 	}
 
-	// Get the download URL if the build is completed successfully
-	if liveBuild.State == SuccessfullyBuilt {
-		err = cli.getBuildURL(u, liveBuild)
+	// Call the API
+	resp, err := cli.httpDo("POST", u, params)
+	if err != nil {
+		return err
 	}
-	return liveBuild, err
+	if resp.StatusCode != 201 {
+		return fmt.Errorf("status %d when creating livefs %s", resp.StatusCode, u.String())
+	}
+	return nil
 }
 
 // getBuildURL fetches the download URL if the build is completed successfully
@@ -77,36 +102,83 @@ func (cli *Client) getBuildURL(u *url.URL, liveBuild *domain.LiveFSBuild) error 
 	return nil
 }
 
-func decodeLiveFSBuild(r *http.Response) (*domain.LiveFSBuild, error) {
-	defer r.Body.Close()
+// BuildMetadata returns the metadata override for the build
+func (cli *Client) buildMetadata(img *domain.BuildRequest) (string, string, string, error) {
+	// Get the metadata for the board and OS
+	key := fmt.Sprintf("%s-%s", img.BoardID, img.OSID)
+	meta := boards[key]
 
-	// Decode the JSON body
-	bld := domain.LiveFSBuild{}
-	err := json.NewDecoder(r.Body).Decode(&bld)
-	switch {
-	// Check we have some data
-	case err == io.EOF:
-		return nil, fmt.Errorf("livefs build request: no data supplied")
-		// Check for parsing errors
-	case err != nil:
-		return nil, fmt.Errorf("livefs build request: %v", err)
+	// Set the snaps and packages, if they are provided
+	if img.Snaps != nil && len(img.Snaps) > 0 {
+		meta.Snaps = img.Snaps
 	}
-	return &bld, err
+	if img.Packages != nil && len(img.Packages) > 0 {
+		meta.Packages = img.Packages
+	}
+
+	// Generate the distro_arch_series
+	das := meta.DistroSeries + "/" + meta.Arch
+
+	// Generate the owner link
+	ownerLink := apiURL + "/~" + cli.settings.LPOwner
+
+	// Generate the livefs URL
+	liveFSURL := apiURL + "/~" + cli.settings.LPOwner + "/" + meta.LiveFS
+
+	// Make sure that we create the livefs record, if needed
+	if err := cli.getOrCreateLiveFS(liveFSURL, meta.Project, meta.DistroSeries, ownerLink); err != nil {
+		return "", "", "", err
+	}
+
+	// Serialize the data as JSON
+	b, err := json.Marshal(meta)
+	if err != nil {
+		return "", "", "", err
+	}
+	return das, liveFSURL, string(b), err
 }
 
-func decodeLiveFSAssets(r *http.Response) ([]string, error) {
-	var assets []string
-	defer r.Body.Close()
-
-	// Decode the JSON body
-	err := json.NewDecoder(r.Body).Decode(&assets)
-	switch {
-	// Check we have some data
-	case err == io.EOF:
-		return nil, fmt.Errorf("livefs assets request: no data supplied")
-		// Check for parsing errors
-	case err != nil:
-		return nil, fmt.Errorf("livefs assets request: %v", err)
+// requestBuild starts a new build as per https://launchpad.net/+apidoc/devel.html#livefs-requestBuild
+func (cli *Client) requestBuild(das, liveFS, metadata string) (string, error) {
+	// Set the parameters
+	params := map[string][]string{
+		"ws.op":              {"requestBuild"},
+		"pocket":             {"Updates"},
+		"archive":            {"https://api.launchpad.net/1.0/ubuntu/+archive/primary"},
+		"distro_arch_series": {das}, // e.g. https://api.launchpad.net/1.0/ubuntu/xenial/armhf
+		"metadata_override":  {metadata},
 	}
-	return assets, err
+
+	// Set up the URL
+	u, err := url.Parse(liveFS)
+	if err != nil {
+		return "", err
+	}
+
+	// Call the API
+	resp, err := cli.httpDo("POST", u, params)
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 201 {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		return "", fmt.Errorf("error submitting %d build: %v", resp.StatusCode, string(bodyBytes))
+	}
+
+	return resp.Header.Get("Location"), err
+}
+
+// httpDo performs the HTTP method, setting the OAuth authorization header
+func (cli *Client) httpDo(method string, u *url.URL, form url.Values) (*http.Response, error) {
+	// Create the request
+	req, err := http.NewRequest(method, u.String(), strings.NewReader(form.Encode()))
+	if err != nil {
+		return nil, err
+	}
+
+	// Set the request header with the correct credentials, and the correct consumer
+	if err := cli.oauthClient.SetAuthorizationHeader(req.Header, &cli.credentials, method, u, form); err != nil {
+		return nil, err
+	}
+
+	return doRequest(req)
 }
