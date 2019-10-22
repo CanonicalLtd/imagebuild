@@ -30,6 +30,16 @@
       type: classic
       version: 18.04
 
+- id: raspberrypi4
+  name: Raspberry Pi4
+  os:
+    - id: core18
+      type: core
+      version: 18
+    - id: classic18.04
+      type: classic
+      version: 18.04
+
 - id: intelnuc
   name: Intel NUC
   os:
@@ -39,12 +49,15 @@
     - id: core18
       type: core
       version: 18
-#    - id: classic16.04
-#      type: classic
-#      version: 16.04
-#    - id: classic18.04
-#      type: classic
-#      version: 18.04
 
+- id: snapdragon
+  name: Qualcomm DragonBoard
+  os:
+    - id: core16
+      type: core
+      version: 16
+    - id: core18
+      type: core
+      version: 18
 
 
