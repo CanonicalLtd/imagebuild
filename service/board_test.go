@@ -54,7 +54,7 @@ func TestNewBoardService(t *testing.T) {
 		count int
 	}{
 		{"invalid-path", args{settingsInvalid}, 0},
-		{"valid-path", args{settingsValid}, 3},
+		{"valid-path", args{settingsValid}, 5},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -148,7 +148,7 @@ func TestClient_buildMetadata(t *testing.T) {
 		wantErr bool
 	}{
 		{"valid-pi2-16", args{"raspberrypi2", "core16"}, "https://api.launchpad.net/1.0/ubuntu/xenial/armhf", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/xenial/ubuntu-core", raspi2Core, false},
-		{"valid-pi2-16", args{"raspberrypi2", "core18"}, "https://api.launchpad.net/1.0/ubuntu/bionic/armhf", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/bionic/ubuntu-core", raspi2Core, false},
+		{"valid-pi2-18", args{"raspberrypi2", "core18"}, "https://api.launchpad.net/1.0/ubuntu/bionic/armhf", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/bionic/ubuntu-core", raspi3Core, false},
 		{"valid-pi3-16", args{"raspberrypi3", "core16"}, "https://api.launchpad.net/1.0/ubuntu/xenial/armhf", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/xenial/ubuntu-core", raspi3Core, false},
 		{"valid-pi3-18", args{"raspberrypi3", "core18"}, "https://api.launchpad.net/1.0/ubuntu/bionic/armhf", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/bionic/ubuntu-core", raspi3Core, false},
 		{"valid-nuc-18", args{"intelnuc", "core18"}, "https://api.launchpad.net/1.0/ubuntu/bionic/amd64", "https://api.launchpad.net/devel/~owner/+livefs/ubuntu/bionic/ubuntu-core", nucCore, false},
