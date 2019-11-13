@@ -38,7 +38,7 @@ func (srv Web) Router() *mux.Router {
 	router := mux.NewRouter()
 
 	router.Handle("/v1/boards", Middleware(http.HandlerFunc(srv.BoardsList))).Methods("GET")
-	router.Handle("/v1/store/snaps/{snapName}", Middleware(http.HandlerFunc(srv.StoreSearchHandler))).Methods("GET")
+	router.Handle("/v1/store/snaps/{snapName}", Middleware(http.HandlerFunc(srv.StoreSearchHandler))).Methods("POST")
 	router.Handle("/v1/build", Middleware(http.HandlerFunc(srv.Build))).Methods("POST")
 	router.Handle("/v1/build/fetch", Middleware(http.HandlerFunc(srv.GetLiveFSBuild))).Methods("POST")
 

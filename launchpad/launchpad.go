@@ -18,6 +18,7 @@ const apiURL = "https://api.launchpad.net/devel"
 type BuildClient interface {
 	Build(img *domain.BuildRequest) (string, error)
 	GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error)
+	BoardMeta(boardID, osID string) domain.Metadata
 }
 
 // Client defines a Launchpad client
@@ -86,4 +87,11 @@ func (cli *Client) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error) {
 		err = cli.getBuildURL(u, liveBuild)
 	}
 	return liveBuild, err
+}
+
+// BoardMeta fetches the metadata for the board and OS
+func (cli *Client) BoardMeta(boardID, osID string) domain.Metadata {
+	// Get the metadata for the board and OS
+	key := fmt.Sprintf("%s-%s", boardID, osID)
+	return boards[key]
 }

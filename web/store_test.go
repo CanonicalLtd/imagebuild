@@ -16,16 +16,17 @@ func TestWeb_StoreSearchHandler(t *testing.T) {
 	tests := []struct {
 		name string
 		url  string
+		body string
 		want int
 	}{
-		{"valid", "/v1/store/snaps/helloworld", http.StatusOK},
-		{"invalid-response", "/v1/store/snaps/invalid", http.StatusOK},
+		{"valid", "/v1/store/snaps/helloworld", `{"osId":"core16", "boardId":"raspberrypi3"}`, http.StatusOK},
+		{"invalid-response", "/v1/store/snaps/invalid", `{"osId":"classic18.04", "boardId":"raspberrypi3"}`, http.StatusOK},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockGET(`[{}]`)
 			srv := NewWebService(settings, brdService)
-			w := sendRequest("GET", tt.url, nil, srv)
+			w := sendRequest("POST", tt.url, strings.NewReader(tt.body), srv)
 			if w.Code != tt.want {
 				t.Errorf("Expected HTTP status '%d', got: %v", tt.want, w.Code)
 			}
@@ -35,7 +36,7 @@ func TestWeb_StoreSearchHandler(t *testing.T) {
 
 func mockGET(body string) {
 	// Mock the HTTP methods
-	get = func(p string) (*http.Response, error) {
+	get = func(p string, h map[string]string) (*http.Response, error) {
 		if strings.Contains(p, "invalid") {
 			return nil, fmt.Errorf("MOCK error get")
 		}

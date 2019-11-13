@@ -17,8 +17,8 @@ let service = {
         return axios.post(constants.baseUrl + 'build/fetch', query);
     },
 
-    storeSearch: (snapName,cancelCallback) => {
-        return axios.get(constants.baseUrl + 'store/snaps/' + snapName);
+    storeSearch: (snapName, bld, cancelCallback) => {
+        return axios.post(constants.baseUrl + 'store/snaps/' + snapName, bld);
     },
 }
 

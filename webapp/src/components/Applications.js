@@ -81,6 +81,8 @@ class Applications extends Component {
 
                 <div className="row">
                     <Snaps message={T('find-snaps')}
+                           board={this.props.board}
+                           os={this.props.os}
                            handleTextChange={this.handleSnapOnChange}
                            handleInstallClick={this.handleSnapInstall}
                            handleCancelClick={this.handleDialogCancel} />

@@ -105,8 +105,7 @@ func (cli *Client) getBuildURL(u *url.URL, liveBuild *domain.LiveFSBuild) error 
 // BuildMetadata returns the metadata override for the build
 func (cli *Client) buildMetadata(img *domain.BuildRequest) (string, string, string, error) {
 	// Get the metadata for the board and OS
-	key := fmt.Sprintf("%s-%s", img.BoardID, img.OSID)
-	meta := boards[key]
+	meta := cli.BoardMeta(img.BoardID, img.OSID)
 
 	// Set the snaps and packages, if they are provided
 	if img.Snaps != nil && len(img.Snaps) > 0 {

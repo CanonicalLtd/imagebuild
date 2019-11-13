@@ -18,6 +18,7 @@ type Board interface {
 	List() []domain.Board
 	Build(img *domain.BuildRequest) (string, error)
 	GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error)
+	BoardMeta(boardID, osID string) domain.Metadata
 }
 
 // BoardService implements the board service
@@ -64,4 +65,9 @@ func (brd *BoardService) Build(img *domain.BuildRequest) (string, error) {
 // GetLiveFSBuild retrieves the details of an image build
 func (brd *BoardService) GetLiveFSBuild(urlString string) (*domain.LiveFSBuild, error) {
 	return brd.Launchpad.GetLiveFSBuild(urlString)
+}
+
+// BoardMeta retrieves the details of an board
+func (brd *BoardService) BoardMeta(boardID, osID string) domain.Metadata {
+	return brd.Launchpad.BoardMeta(boardID, osID)
 }

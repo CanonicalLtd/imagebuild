@@ -31,8 +31,11 @@ class SnapDialogBox extends Component {
             this.setState({currentSearch: ''})
             return
         }
+        let bld = {boardId: this.props.board.id, osId: this.props.os.id}
+
         this.setState({loadingSearch: true})
-        api.storeSearch(this.state.snapName).then(response => {
+
+        api.storeSearch(this.state.snapName, bld).then(response => {
             if ((response.data._embedded) && (response.data._embedded['clickindex:package'])) {
                 this.setState({snaps: response.data._embedded['clickindex:package'], loadingSearch: false, message: null, messageType: null, currentSearch: this.state.snapName, page: 1, startRow: 0, endRow: PAGELENGTH})
             }

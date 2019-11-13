@@ -42,6 +42,11 @@ func (cli *MockClient) GetLiveFSBuild(rawURL string) (*domain.LiveFSBuild, error
 	return &domain.LiveFSBuild{}, nil
 }
 
+// BoardMeta mocks the board metadata retrieval
+func (cli *MockClient) BoardMeta(boardID, osID string) domain.Metadata {
+	return domain.Metadata{}
+}
+
 // mockDoRequest mocks performing an HTTP request
 func mockDoRequest(req *http.Request) (*http.Response, error) {
 	return &http.Response{StatusCode: 201, Body: ioutil.NopCloser(strings.NewReader(""))}, nil
