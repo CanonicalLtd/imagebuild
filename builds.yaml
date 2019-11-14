@@ -54,6 +54,13 @@ raspberrypi3-classic18.04:
   project: "ubuntu-cpc"
   subarch: "raspi3"
   image_format: "ubuntu-image"
+raspberrypi3-classic6418.04:
+  distro_series: "https://api.launchpad.net/1.0/ubuntu/bionic"
+  arch: "arm64"
+  livefs: "+livefs/ubuntu/bionic/ubuntu-cpc"
+  project: "ubuntu-cpc"
+  subarch: "raspi3"
+  image_format: "ubuntu-image"
 raspberrypi4-core18:
   distro_series: "https://api.launchpad.net/1.0/ubuntu/bionic"
   arch: "armhf"
@@ -67,6 +74,13 @@ raspberrypi4-classic18.04:
   livefs: "+livefs/ubuntu/bionic/ubuntu-cpc"
   project: "ubuntu-cpc"
   subarch: "raspi3"
+raspberrypi4-classic6418.04:
+  distro_series: "https://api.launchpad.net/1.0/ubuntu/bionic"
+  arch: "arm64"
+  livefs: "+livefs/ubuntu/bionic/ubuntu-cpc"
+  project: "ubuntu-cpc"
+  subarch: "raspi3"
+  image_format: "ubuntu-image"
 intelnuc-core16:
   distro_series: "https://api.launchpad.net/1.0/ubuntu/xenial"
   arch: "amd64"

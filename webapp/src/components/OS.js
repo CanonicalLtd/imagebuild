@@ -7,13 +7,12 @@ import {T} from './Utils'
 class OS extends Component {
     renderOS() {
         return this.props.board.os.map(o => {
-            let id=o.type + o.version
             return (
-                <div className="p-card os" key={id}  onClick={this.handleClick}>
+                <div className="p-card os" key={o.id}  onClick={this.handleClick}>
                     <h3 className="u-vertically-center">
                         {T(o.type)} {T(o.version)}
                     </h3>
-                    <a href={'/boards/' + this.props.board.id + '/' + id} className="p-button--neutral is-inline">{T('select-version')}</a>
+                    <a href={'/boards/' + this.props.board.id + '/' + o.id} className="p-button--neutral is-inline">{T('select-version')}</a>
                 </div>
             )
         })

@@ -29,6 +29,9 @@
     - id: classic18.04
       type: classic
       version: 18.04
+    - id: classic6418.04
+      type: classic
+      version: 64-bit 18.04
 
 - id: raspberrypi4
   name: Raspberry Pi4
@@ -39,6 +42,9 @@
     - id: classic18.04
       type: classic
       version: 18.04
+    - id: classic6418.04
+      type: classic
+      version: 64-bit 18.04
 
 - id: intelnuc
   name: Intel NUC
