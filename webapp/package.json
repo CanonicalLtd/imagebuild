@@ -27,7 +27,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "vanilla-framework": "^2.3.0"
   }
 }
